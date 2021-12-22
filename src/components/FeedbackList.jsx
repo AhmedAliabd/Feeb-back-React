@@ -1,24 +1,43 @@
-import PropTypes from 'prop-types'
-import FeedbackItem from './FeedbackItem'
-function FeedbackList({feedback}) {
+import {motion,AnimatePresence} from "framer-motion";
+import PropTypes from 'prop-types';
+import FeedbackItem from './FeedbackItem';
+function FeedbackList({feedback,handleDelete}) {
 
     if(!feedback || feedback.FeedbackList === 0){
         return <p>No Data yet</p>
     }
+
     return (
         <div className='feedback-list'>
+            <AnimatePresence>
             {feedback.map((item)=>(
-                <FeedbackItem key={item.id} item={item}/>
-
+                <motion.div 
+                key={item.id}
+                initial= {{opacity:0}}
+                animate= {{opacity:1}}
+                exit={{opacity:0}}
+                >
+                    <FeedbackItem key={item.id} item={item} deleteItem= {handleDelete} />
+                </motion.div>
             ))}
+            </AnimatePresence>
         </div>
     )
+
+    // return (
+    //     <div className='feedback-list'>
+    //         {feedback.map((item)=>(
+    //             <FeedbackItem key={item.id} item={item} deleteItem= {handleDelete} />
+
+    //         ))}
+    //     </div>
+    // )
 }
 
 FeedbackList.propTypes = {
     feedback: PropTypes.arrayOf(
         PropTypes.shape({
-            id: PropTypes.number.isRequired,
+            id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
             text: PropTypes.string.isRequired,
             rating: PropTypes.number.isRequired,
 
